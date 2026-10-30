@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const API_BASE_URL = "";
+// Tự động kết nối tới Backend cổng 5001 khi chạy Frontend riêng (Vite cổng 5173)
+// và vẫn hoạt động bình thường khi chạy chung trên cổng 5001
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (window.location.port === "5001" ? "" : "http://localhost:5001");
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
