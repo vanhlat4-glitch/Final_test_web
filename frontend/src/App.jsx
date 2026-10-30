@@ -16,6 +16,11 @@ import {
   Search,
   RotateCcw,
   X,
+  Lock,
+  Mail,
+  LogIn,
+  Sun,
+  Moon,
 } from "lucide-react";
 import Header from "./components/Header";
 import TeacherList from "./components/TeacherList";
@@ -26,7 +31,183 @@ import {
   getStudentsApi,
   createStudentApi,
   deleteStudentApi,
+  loginApi,
 } from "./services/api";
+
+// --- Màn hình Đăng nhập (Login View) ---
+const LoginView = ({ onLoginSuccess, darkMode, onToggleDarkMode, showToast }) => {
+  const [email, setEmail] = useState("admin@educore.edu.vn");
+  const [password, setPassword] = useState("123456");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const res = await loginApi({ email, password });
+      if (res.data?.success) {
+        onLoginSuccess(res.data.data);
+        showToast(res.data.message || "Đăng nhập thành công!", "success");
+      }
+    } catch (err) {
+      const msg =
+        err.response?.data?.message || "Đăng nhập thất bại, vui lòng thử lại!";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <div style={{ position: "fixed", top: "20px", right: "24px" }}>
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          onClick={onToggleDarkMode}
+        >
+          {darkMode ? (
+            <Sun size={17} color="#fbbf24" />
+          ) : (
+            <Moon size={17} color="#4f46e5" />
+          )}
+          <span>{darkMode ? "Chế độ Sáng" : "Chế độ Tối"}</span>
+        </button>
+      </div>
+
+      <div className="login-card">
+        <div className="login-header">
+          <div className="brand-icon-wrap" style={{ width: "48px", height: "48px", margin: "0 auto 12px" }}>
+            <GraduationCap size={28} color="#ffffff" />
+          </div>
+          <h1 className="login-title">EduCore System</h1>
+          <p className="login-subtitle">
+            Đăng nhập Hệ thống Quản trị Trường học
+          </p>
+        </div>
+
+        {error && (
+          <div
+            style={{
+              background: "#fee2e2",
+              color: "#b91c1c",
+              padding: "10px 14px",
+              borderRadius: "8px",
+              marginBottom: "16px",
+              fontSize: "0.84rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <AlertCircle size={17} />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div className="form-group">
+            <label className="form-label required">Email hoặc Số điện thoại</label>
+            <div style={{ position: "relative" }}>
+              <Mail
+                size={16}
+                style={{
+                  position: "absolute",
+                  left: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "var(--text-muted)",
+                }}
+              />
+              <input
+                type="text"
+                className="form-control"
+                style={{ width: "100%", paddingLeft: "36px" }}
+                placeholder="admin@educore.edu.vn"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label required">Mật khẩu</label>
+            <div style={{ position: "relative" }}>
+              <Lock
+                size={16}
+                style={{
+                  position: "absolute",
+                  left: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "var(--text-muted)",
+                }}
+              />
+              <input
+                type="password"
+                className="form-control"
+                style={{ width: "100%", paddingLeft: "36px" }}
+                placeholder="Nhập mật khẩu..."
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={loading}
+            style={{
+              width: "100%",
+              justifyContent: "center",
+              padding: "11px",
+              fontSize: "0.92rem",
+              marginTop: "4px",
+            }}
+          >
+            <LogIn size={17} />
+            <span>{loading ? "Đang đăng nhập..." : "Đăng nhập hệ thống"}</span>
+          </button>
+        </form>
+
+        <div className="login-quick-accounts">
+          <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: "8px" }}>
+            Chọn nhanh tài khoản mẫu (Mật khẩu: <b>123456</b>):
+          </div>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className="btn btn-default"
+              style={{ fontSize: "0.75rem", padding: "5px 10px", flex: 1, justifyContent: "center" }}
+              onClick={() => {
+                setEmail("admin@educore.edu.vn");
+                setPassword("123456");
+              }}
+            >
+              👑 Admin Hệ thống
+            </button>
+            <button
+              type="button"
+              className="btn btn-default"
+              style={{ fontSize: "0.75rem", padding: "5px 10px", flex: 1, justifyContent: "center" }}
+              onClick={() => {
+                setEmail("trantrungtruc@school.edu.vn");
+                setPassword("123456");
+              }}
+            >
+              👨‍🏫 GV: Trần Trung Trực
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // --- 1. View Thống kê (Dashboard) ---
 const DashboardView = ({ onNavigate }) => {
@@ -546,6 +727,45 @@ export function App() {
   const [openStudentSubmenu, setOpenStudentSubmenu] = useState(false);
   const [toast, setToast] = useState(null);
 
+  // Chế độ Sáng / Tối (lưu vào localStorage)
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("educore_theme") === "dark";
+  });
+
+  // Trạng thái Đăng nhập / Đăng xuất (lưu vào localStorage)
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem("educore_user");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (_) {}
+    }
+    return {
+      name: "Quản trị viên",
+      email: "admin@educore.edu.vn",
+      role: "ADMIN",
+    };
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      darkMode ? "dark" : "light"
+    );
+    localStorage.setItem("educore_theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  const handleLoginSuccess = (userData) => {
+    setCurrentUser(userData);
+    localStorage.setItem("educore_user", JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem("educore_user");
+    showToast("Đã đăng xuất khỏi hệ thống!", "success");
+  };
+
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => {
@@ -599,10 +819,40 @@ export function App() {
     }
   };
 
+  if (!currentUser) {
+    return (
+      <>
+        <LoginView
+          onLoginSuccess={handleLoginSuccess}
+          darkMode={darkMode}
+          onToggleDarkMode={() => setDarkMode((prev) => !prev)}
+          showToast={showToast}
+        />
+        {toast && (
+          <div className="toast-container">
+            <div className={`toast toast-${toast.type}`}>
+              {toast.type === "success" ? (
+                <CheckCircle2 size={18} />
+              ) : (
+                <AlertCircle size={18} />
+              )}
+              <span>{toast.message}</span>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
     <div className="app-container">
       {/* 1. Top Navbar (EduCore System) */}
-      <Header />
+      <Header
+        currentUser={currentUser}
+        onLogout={handleLogout}
+        darkMode={darkMode}
+        onToggleDarkMode={() => setDarkMode((prev) => !prev)}
+      />
 
       {/* 2. Body Layout: Left Sidebar + Right Workspace */}
       <div className="workspace-layout">

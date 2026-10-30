@@ -27,6 +27,70 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use("/teachers", teacherRouter);
 app.use("/teacher-positions", teacherPositionRouter);
 
+// API Đăng nhập hệ thống
+app.post("/auth/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập đầy đủ Email/Tài khoản và Mật khẩu!",
+      });
+    }
+
+    const normalized = email.trim().toLowerCase();
+
+    // Tài khoản Admin mặc định
+    if (
+      (normalized === "admin@educore.edu.vn" ||
+        normalized === "admin@school.edu.vn" ||
+        normalized === "admin") &&
+      password === "123456"
+    ) {
+      return res.status(200).json({
+        success: true,
+        message: "Đăng nhập thành công!",
+        data: {
+          name: "Quản trị viên",
+          email: "admin@educore.edu.vn",
+          role: "ADMIN",
+        },
+      });
+    }
+
+    // Tìm trong bảng User của MongoDB (mật khẩu mặc định 123456)
+    const user = await UserModel.findOne({
+      isDeleted: false,
+      $or: [{ email: normalized }, { phoneNumber: normalized }],
+    });
+
+    if (!user || password !== "123456") {
+      return res.status(401).json({
+        success: false,
+        message: "Tài khoản hoặc mật khẩu không chính xác! (Mật khẩu mặc định: 123456)",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Xin chào, ${user.name}!`,
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email || normalized,
+        role: user.role || "TEACHER",
+        avatar: user.avatar || "",
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Lỗi máy chủ khi đăng nhập",
+      error: error.message,
+    });
+  }
+});
+
 // API hỗ trợ quản lý Học sinh (từ collection Users với role STUDENT)
 app.get("/students", async (req, res) => {
   try {

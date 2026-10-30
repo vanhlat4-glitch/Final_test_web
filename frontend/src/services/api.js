@@ -29,3 +29,6 @@ export const deleteTeacherPositionApi = (id) =>
 export const getStudentsApi = (params) => api.get("/students", { params });
 export const createStudentApi = (data) => api.post("/students", data);
 export const deleteStudentApi = (id) => api.delete(`/students/${id}`);
+
+// API Đăng nhập
+export const loginApi = (data) => api.post("/auth/login", data);
