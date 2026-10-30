@@ -1,0 +1,183 @@
+{
+  "info": {
+    "name": "EduCore School System - API Collection",
+    "description": "Bộ API đầy đủ để test trên Postman (Giáo viên, Vị trí công tác, Học sinh)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Lấy danh sách Giáo viên (Có phân trang)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/teachers?page=1&limit=10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teachers"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Tìm kiếm Giáo viên theo từ khóa",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/teachers?page=1&limit=10&search=Trần",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teachers"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" },
+            { "key": "search", "value": "Trần" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Tạo mới Giáo viên (Body raw JSON)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Nguyễn Văn Hoàng\",\n  \"email\": \"hoang.nv@school.edu.vn\",\n  \"phoneNumber\": \"0912345678\",\n  \"address\": \"Cầu Giấy, Hà Nội\",\n  \"identity\": \"001095123456\",\n  \"dob\": \"1995-08-20\",\n  \"startDate\": \"2024-10-15\",\n  \"teacherPositionsId\": [\"670b2f9a6dce2acd384c6c65\"],\n  \"degrees\": [\n    {\n      \"type\": \"Master\",\n      \"school\": \"Đại học Bách Khoa Hà Nội\",\n      \"major\": \"Công Nghệ Thông Tin\",\n      \"year\": 2020,\n      \"isGraduated\": true\n    }\n  ],\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/teachers",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teachers"]
+        }
+      }
+    },
+    {
+      "name": "4. Tạo mới Giáo viên kèm Upload Ảnh (Body form-data)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "name", "value": "Lê Thị Hồng Nhung", "type": "text" },
+            { "key": "email", "value": "hongnhung@school.edu.vn", "type": "text" },
+            { "key": "phoneNumber", "value": "0987654321", "type": "text" },
+            { "key": "address", "value": "Đống Đa, Hà Nội", "type": "text" },
+            { "key": "identity", "value": "001196654321", "type": "text" },
+            { "key": "dob", "value": "1996-05-12", "type": "text" },
+            { "key": "teacherPositionsId", "value": "[\"670b2f9a6dce2acd384c6c65\"]", "type": "text" },
+            { "key": "degrees", "value": "[{\"type\":\"Bachelor\",\"school\":\"ĐH Sư Phạm Hà Nội\",\"major\":\"Sư phạm Toán\",\"year\":2018,\"isGraduated\":true}]", "type": "text" },
+            { "key": "avatar", "type": "file", "src": [] }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:5001/teachers",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teachers"]
+        }
+      }
+    },
+    {
+      "name": "5. Cập nhật & Thăng chức Giáo viên cũ lên chức mới",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Trần Trung Trực\",\n  \"teacherPositionsId\": [\n    \"670b2f9a6dce2acd384c6c65\",\n    \"670b30586dce2acd384c6c75\",\n    \"670b307b6dce2acd384c6c79\"\n  ],\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/teachers/670e4b9d9b361ae928a5c732",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teachers", "670e4b9d9b361ae928a5c732"]
+        }
+      }
+    },
+    {
+      "name": "6. Xóa Giáo viên theo ID",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/teachers/670f4039688dec7f661d70df",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teachers", "670f4039688dec7f661d70df"]
+        }
+      }
+    },
+    {
+      "name": "7. Lấy toàn bộ Vị trí công tác",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/teacher-positions",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teacher-positions"]
+        }
+      }
+    },
+    {
+      "name": "8. Tạo mới Vị trí công tác",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"TTCM\",\n  \"name\": \"Tổ trưởng chuyên môn\",\n  \"des\": \"Quản lý chuyên môn tổ bộ môn tại trường\",\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/teacher-positions",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teacher-positions"]
+        }
+      }
+    },
+    {
+      "name": "9. Cập nhật Vị trí công tác & Bổ nhiệm giáo viên",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Trưởng bộ môn\",\n  \"des\": \"Trưởng bộ môn giảng dạy tại trường\",\n  \"isActive\": true,\n  \"teacherIds\": [\"670f2f936d7976234bcdf3fd\"],\n  \"replaceOldPositions\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/teacher-positions/670b30586dce2acd384c6c75",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["teacher-positions", "670b30586dce2acd384c6c75"]
+        }
+      }
+    }
+  ]
+}
+

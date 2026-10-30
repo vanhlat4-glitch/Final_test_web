@@ -1,0 +1,31 @@
+import axios from "axios";
+
+const API_BASE_URL = "";
+
+export const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// APIs cho Giáo viên
+export const getTeachersApi = (params) => api.get("/teachers", { params });
+export const createTeacherApi = (data) => api.post("/teachers", data);
+export const updateTeacherApi = (id, data) => api.put(`/teachers/${id}`, data);
+export const deleteTeacherApi = (id) => api.delete(`/teachers/${id}`);
+
+// APIs cho Vị trí công tác
+export const getTeacherPositionsApi = (params) =>
+  api.get("/teacher-positions", { params });
+export const createTeacherPositionApi = (data) =>
+  api.post("/teacher-positions", data);
+export const updateTeacherPositionApi = (id, data) =>
+  api.put(`/teacher-positions/${id}`, data);
+export const deleteTeacherPositionApi = (id) =>
+  api.delete(`/teacher-positions/${id}`);
+
+// APIs cho Học sinh
+export const getStudentsApi = (params) => api.get("/students", { params });
+export const createStudentApi = (data) => api.post("/students", data);
+export const deleteStudentApi = (id) => api.delete(`/students/${id}`);
